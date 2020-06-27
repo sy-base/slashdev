@@ -44,7 +44,7 @@ resource "aws_instance" "origin-server" {
           sleep 5
           npm install -g gatsby
           gatsby --version || exit 1
-          su -c 'git clone https://github.com/sy-base/slashdev.git' - gatsby
+          su -c 'git clone -b develop https://github.com/sy-base/slashdev.git' - gatsby
           su -c 'cd slashdev; npm install' - gatsby
           su -c 'cd slashdev; gatsby build' - gatsby
           su -c 'cd slashdev; gatsby serve -H 0.0.0.0 > gatsby.log 2>&1 &' - gatsby
@@ -58,7 +58,7 @@ resource "aws_instance" "origin-server" {
 
 resource "aws_route53_record" "origin-dns" {
   zone_id = data.aws_route53_zone.slashdev-org.zone_id
-  name    = "testorigin.slashdev.org."
+  name    = "origin.slashdev.org."
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.origin-server.public_ip}"]
