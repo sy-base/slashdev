@@ -12,10 +12,5 @@ phases:
       - gatsby build
 artifacts:
   files:
-    - **/*
+    - '**/*'
   name: slashdev.org-$(date +%Y%m%d)
-  #discard-paths: yes
-  #base-directory: location
-#cache:
-  #paths:
-    # - paths
