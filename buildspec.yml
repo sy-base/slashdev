@@ -10,7 +10,6 @@ phases:
     commands:
       - npm install
       - gatsby build
-      - ls -laR
 artifacts:
   files:
     - **/*
