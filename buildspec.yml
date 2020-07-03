@@ -13,4 +13,4 @@ phases:
 artifacts:
   files:
     - '**/*'
-  name: slashdev.org-$(date +%Y%m%d)
+  name: slashdev.org-$(date +%Y%m%d).zip
