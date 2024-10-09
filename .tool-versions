@@ -1,0 +1,5 @@
+nodejs 14.4.0
+python 3.11.9
+terraform 1.9.7
+tflint 0.53.0
+tfsec 1.28.11

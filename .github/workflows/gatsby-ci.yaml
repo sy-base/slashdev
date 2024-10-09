@@ -1,0 +1,27 @@
+name: SlashDev CI
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.cache-hit != 'true'
+        run: npm install
+      - name: Run tests
+        run: npm test
+
