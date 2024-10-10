@@ -4,12 +4,12 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
-data "aws_ami" "amzn" {
+data "aws_ami" "image" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
@@ -17,7 +17,7 @@ data "aws_ami" "amzn" {
     values = ["hvm"]
   }
 
-  owners = ["137112412989"] # Amazon
+  owners = ["099720109477"] # Ubuntu
 }
 
 data "aws_route53_zone" "slashdev-org" {
@@ -25,7 +25,7 @@ data "aws_route53_zone" "slashdev-org" {
 }
 
 resource "aws_instance" "origin-server" {
-  ami           = data.aws_ami.amzn.id
+  ami           = data.aws_ami.image.id
   instance_type = "t3a.micro"
   key_name      = "bacon-id_rsa"
   vpc_security_group_ids = [ "sg-097c47b767eae23ba", "sg-af64efe7", "sg-2730916e" ]
