@@ -1,4 +1,4 @@
-name: SlashDev CI
+name: SlashDev CD
 on:
   workflow_dispatch:
   push:
