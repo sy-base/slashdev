@@ -1,7 +1,5 @@
 provider "aws" {
   region = "us-east-1"
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
 }
 
 data "aws_ami" "image" {
@@ -26,7 +24,7 @@ data "aws_route53_zone" "slashdev-org" {
 
 resource "aws_instance" "origin-server" {
   ami           = data.aws_ami.image.id
-  instance_type = "t3a.micro"
+  instance_type = "t3a.small"
   key_name      = "bacon-id_rsa"
   vpc_security_group_ids = [ "sg-097c47b767eae23ba", "sg-af64efe7", "sg-2730916e" ]
 
