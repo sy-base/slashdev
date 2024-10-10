@@ -25,8 +25,8 @@ jobs:
         uses: asdf-vm/actions/install@v3
       - name: Terraform Lint
         run: |
-        cd terraform
-        tflint
+          cd terraform
+          tflint
       - name: Terraform Validate/Plan
         env:
           TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
