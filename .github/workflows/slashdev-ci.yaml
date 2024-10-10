@@ -1,11 +1,11 @@
-name: SlashDev IaC
+name: SlashDev CI
 on:
   workflow_dispatch:
   push:
     branches:
       - develop
 jobs:
-  terraform-validate:
+  terraform-plan:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
@@ -13,13 +13,13 @@ jobs:
       - name: Install asdf
         uses: asdf-vm/actions/setup@v3
       - name: Cache asdf
-        id: cache
+        id: asdfcache
         uses: actions/cache@v4
         with:
           path: ~/.asdf
           key: asdf-${{ hashFiles('**/.tool-versions') }}
       - name: Install asdf tools
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.asdfcache.outputs.cache-hit != 'true'
         uses: asdf-vm/actions/install@v3
       - name: Terraform Validate/Plan
         env:
@@ -29,3 +29,25 @@ jobs:
           cd terraform
           terraform init && terraform validate
           terraform plan
+  gatsby-tests:
+    runs-on: ubuntu-22.04
+    needs: terraform-plan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+      - name: Cache dependencies
+        id: npmcache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.npmcache.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Run tests
+        run: npm test
+
