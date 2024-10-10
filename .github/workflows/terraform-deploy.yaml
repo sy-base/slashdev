@@ -26,9 +26,9 @@ jobs:
         uses: asdf-vm/actions/install@v3
       - name: Terraform Validate
         run: |
-          cd slashdev/terraform
+          cd terraform
           terraform init && terraform validate
       - name: Terraform Plan
         run: |
-          cd slashdev/terraform
+          cd terraform
           terraform plan
