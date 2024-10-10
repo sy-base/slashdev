@@ -1,4 +1,4 @@
 nodejs 14.4.0
-terraform 0.13.7
+terraform 0.14.11
 tflint 0.53.0
 tfsec 1.28.11

@@ -11,18 +11,11 @@ source "\$HOME/.asdf/asdf.sh"
 source "\$HOME/.asdf/completions/asdf.bash"
 EOF
 su -c 'git clone -b develop https://github.com/sy-base/slashdev.git' - gatsby
-
-#curl -O https://nodejs.org/dist/latest/node-v14.4.0-linux-x64.tar.gz
-#mkdir -p /usr/local/nodejs
-#tar -C /usr/local/nodejs -zxvf node-v14.4.0-linux-x64.tar.gz
-#sed -i 's/PATH=$PATH/PATH=\/usr\/local\/nodejs\/node-v14.4.0-linux-x64\/bin:$PATH/g' ~/.bash_profile
-#su -c "sed -i 's/PATH=\$PATH/PATH=\/usr\/local\/nodejs\/node-v14.4.0-linux-x64\/bin:\$PATH/g' ~/.bash_profile" - gatsby
-#source ~/.bash_profile
-#sleep 5
-npm install -g gatsby
-gatsby --version || exit 1
-
-su -c 'cd slashdev; npm install' - gatsby
+su -c 'asdf plugin add nodejs' - gatsby
+su -c 'cd slashdev; asdf install nodejs' - gatsby
+su -c 'cd slashdev; npm install -g gatsby' - gatsby
+su -c 'cd slashdev; gatsby --version || exit 1' - gatsby
+#su -c 'cd slashdev; npm install' - gatsby
 su -c 'cd slashdev; gatsby build' - gatsby
 su -c 'cd slashdev; gatsby serve -H 0.0.0.0 > gatsby.log 2>&1 &' - gatsby
 curl -o codedeploy-install https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install

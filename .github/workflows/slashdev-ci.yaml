@@ -12,17 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install asdf
-        uses: asdf-vm/actions/setup@v3
       - name: Cache asdf
         id: asdfcache
         uses: actions/cache@v4
         with:
           path: ~/.asdf
-          key: asdf-${{ hashFiles('**/.tool-versions') }}
+          key: asdf-${{ hashFiles('.tool-versions') }}
       - name: Install asdf tools
-        if: steps.asdfcache.outputs.cache-hit != 'true'
         uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
       - name: Terraform Lint
         env:
           TF_VAR_aws_access_key: "${{ secrets.AWS_ACCESS_KEY }}"
