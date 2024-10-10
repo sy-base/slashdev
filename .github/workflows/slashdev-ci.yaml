@@ -1,12 +1,14 @@
 name: SlashDev CI
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - develop
+  - workflow_dispatch:
+  - push:
+      branches:
+        - develop
 jobs:
   terraform-plan:
     runs-on: ubuntu-22.04
+    environment:
+      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,24 +23,37 @@ jobs:
       - name: Install asdf tools
         if: steps.asdfcache.outputs.cache-hit != 'true'
         uses: asdf-vm/actions/install@v3
+      - name: Terraform Lint
+        run: |
+        cd terraform
+        tflint
       - name: Terraform Validate/Plan
         env:
           TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
         run: |
           cd terraform
-          terraform init && terraform validate
-          terraform plan
+          terraform init || exit 1
+          terraform validate && terraform plan
   gatsby-tests:
     runs-on: ubuntu-22.04
     needs: terraform-plan
+    environment:
+      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@v3
+      - name: Cache asdf
+        id: asdfcache
+        uses: actions/cache@v4
         with:
-          node-version: '14'
+          path: ~/.asdf
+          key: asdf-${{ hashFiles('**/.tool-versions') }}
+      - name: Install asdf tools
+        if: steps.asdfcache.outputs.cache-hit != 'true'
+        uses: asdf-vm/actions/install@v3
       - name: Cache dependencies
         id: npmcache
         uses: actions/cache@v2
