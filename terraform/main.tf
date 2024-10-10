@@ -1,7 +1,7 @@
 provider "aws" {
-  version = "~> 2.8"
   region = "us-east-1"
-
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
 
 data "aws_ami" "amzn" {
@@ -30,30 +30,7 @@ resource "aws_instance" "origin-server" {
   key_name      = "bacon-id_rsa"
   vpc_security_group_ids = [ "sg-097c47b767eae23ba", "sg-af64efe7", "sg-2730916e" ]
 
-  user_data = <<EOF
-          #!/bin/bash
-          yum -y update
-          yum -y groupinstall "Development Tools"
-          yum -y install git libglvnd-glx libXi ruby
-          adduser gatsby
-          curl -O https://nodejs.org/dist/latest/node-v14.4.0-linux-x64.tar.gz
-          mkdir -p /usr/local/nodejs
-          tar -C /usr/local/nodejs -zxvf node-v14.4.0-linux-x64.tar.gz
-          sed -i 's/PATH=$PATH/PATH=\/usr\/local\/nodejs\/node-v14.4.0-linux-x64\/bin:$PATH/g' ~/.bash_profile
-          su -c "sed -i 's/PATH=\$PATH/PATH=\/usr\/local\/nodejs\/node-v14.4.0-linux-x64\/bin:\$PATH/g' ~/.bash_profile" - gatsby
-          source ~/.bash_profile
-          sleep 5
-          npm install -g gatsby
-          gatsby --version || exit 1
-          su -c 'git clone -b develop https://github.com/sy-base/slashdev.git' - gatsby
-          su -c 'cd slashdev; npm install' - gatsby
-          su -c 'cd slashdev; gatsby build' - gatsby
-          su -c 'cd slashdev; gatsby serve -H 0.0.0.0 > gatsby.log 2>&1 &' - gatsby
-          curl -o codedeploy-install https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
-          chmod +x codedeploy-install
-          ./codedeploy-install auto
-
-  EOF
+  user_data = file("${path.module}/templates/user-data.tftpl")
 
   tags = {
     Name = "slashdev.org-origin"
@@ -65,7 +42,7 @@ resource "aws_route53_record" "origin-dns" {
   name    = "origin.slashdev.org."
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.origin-server.public_ip}"]
+  records = [ aws_instance.origin-server.public_ip ]
 }
 
 
