@@ -35,7 +35,7 @@ jobs:
           TF_VAR_aws_secret_key: "${{ secrets.AWS_SECRET_KEY }}"
         run: |
           cd terraform
-          terraform init || exit 1
+          terraform init
           terraform validate && terraform plan
   gatsby-tests:
     runs-on: ubuntu-22.04
