@@ -28,8 +28,8 @@ jobs:
           tflint
       - name: Terraform Security
         run: |
-        cd terraform
-        tfsec -m CRITICAL --no-code -s
+          cd terraform
+          tfsec -m CRITICAL --no-code -s
       - name: Terraform Validate/Plan
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
@@ -56,3 +56,11 @@ jobs:
         uses: asdf-vm/actions/install@v3
         with:
           asdf_branch: v0.14.1
+      - name: Terraform APPLY
+        env:
+          AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_KEY }}"
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve
