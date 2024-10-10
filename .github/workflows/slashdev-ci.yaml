@@ -20,6 +20,8 @@ jobs:
           key: asdf-${{ hashFiles('.tool-versions') }}
       - name: Install asdf tools
         uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
       - name: Terraform Lint
         run: |
           cd terraform
