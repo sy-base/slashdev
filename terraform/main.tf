@@ -27,7 +27,12 @@ resource "aws_instance" "origin-server" {
   instance_type = "t3a.small"
   key_name      = "bacon-id_rsa"
   vpc_security_group_ids = [ "sg-097c47b767eae23ba", "sg-af64efe7", "sg-2730916e" ]
-
+  metadata_options {
+    http_tokens = "required"
+  }
+  root_block_device {
+      encrypted = true
+  }
   user_data = file("${path.module}/templates/user-data.tftpl")
 
   tags = {
@@ -42,8 +47,6 @@ resource "aws_route53_record" "origin-dns" {
   ttl     = "300"
   records = [ aws_instance.origin-server.public_ip ]
 }
-
-
 
 resource "aws_s3_bucket" "artifacts" {
   bucket = "slashdev.org-artifacts"
@@ -60,6 +63,14 @@ resource "aws_s3_bucket" "artifacts" {
       expired_object_delete_marker = false
     }
   }
+}
+
+resource "aws_s3_bucket_public_access_block" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+  block_public_acls = true
+  ignore_public_acls = true
+  block_public_policy = true
+  restrict_public_buckets = true
 }
 
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
@@ -112,7 +123,7 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
 
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-1:675169025934:certificate/eecc4e60-096c-4d71-8b1c-bc0f896ac764"
-    minimum_protocol_version = "TLSv1.2_2018"
+    minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method = "sni-only"
   }
 }
