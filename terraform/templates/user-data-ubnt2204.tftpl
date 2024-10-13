@@ -14,4 +14,4 @@ su -c 'asdf plugin add hugo' - appuser
 su -c 'cd slashdev; asdf install hugo' - appuser
 su -c 'cd slashdev; hugo --version' - appuser
 ###
-su -c 'cd slashdev; hugo server --bind 0.0.0.0 -p 9000 > hugo.log 2>&1 &' - appuser
+su -c 'cd slashdev; hugo server -s src --bind 0.0.0.0 -p 9000 > hugo.log 2>&1 &' - appuser

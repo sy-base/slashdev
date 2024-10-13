@@ -20,17 +20,12 @@ jobs:
         uses: pre-commit/action@v3.0.1
   terraform-plan:
     runs-on: ubuntu-22.04
+    needs: pre-commit
     environment:
       name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Cache asdf
-        id: asdfcache
-        uses: actions/cache@v4
-        with:
-          path: ~/.asdf
-          key: asdf-${{ hashFiles('.tool-versions') }}
       - name: Install asdf tools
         uses: asdf-vm/actions/install@v3
         with:
@@ -59,12 +54,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Cache asdf
-        id: asdfcache
-        uses: actions/cache@v4
-        with:
-          path: ~/.asdf
-          key: asdf-${{ hashFiles('.tool-versions') }}
       - name: Install asdf tools
         uses: asdf-vm/actions/install@v3
         with:
