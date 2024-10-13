@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - release/**
 jobs:
   pre-commit:
     runs-on: ubuntu-22.04
