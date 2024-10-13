@@ -2,9 +2,22 @@ name: SlashDev CI
 on:
   workflow_dispatch:
   push:
-    branches:
-      - develop
+      branches:
+        - develop
 jobs:
+  pre-commit:
+    runs-on: ubuntu-22.04
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Validate using pre-commit
+        uses: pre-commit/action@v3.0.1
   terraform-plan:
     runs-on: ubuntu-22.04
     environment:
@@ -32,3 +45,16 @@ jobs:
           cd terraform
           terraform init
           terraform validate && terraform plan
+  hugo-test-build:
+    runs-on: ubuntu-22.04
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Hugo build
+        run: "hugo -s src"
