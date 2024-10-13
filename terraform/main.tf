@@ -7,7 +7,7 @@ data "aws_ami" "image" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+    values = [ var.ec2_image_name ]
   }
 
   filter {
@@ -15,43 +15,18 @@ data "aws_ami" "image" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Ubuntu
+  owners = [ var.ec2_image_owner ]
 }
 
 data "aws_route53_zone" "slashdev-org" {
   name = "slashdev.org."
 }
 
-resource "aws_s3_bucket" "artifacts" {
-  bucket = "slashdev.org-artifacts"
-  acl    = "private"
-  versioning {
-    enabled = false
-  }
-
-  lifecycle_rule {
-    abort_incomplete_multipart_upload_days = "7"
-    enabled = true
-    expiration {
-      days = 0
-      expired_object_delete_marker = false
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "artifacts" {
-  bucket = aws_s3_bucket.artifacts.id
-  block_public_acls = true
-  ignore_public_acls = true
-  block_public_policy = true
-  restrict_public_buckets = true
-}
-
 resource "aws_instance" "origin-server" {
   ami           = data.aws_ami.image.id
-  instance_type = "t3a.micro"
-  key_name      = "bacon-id_rsa"
-  vpc_security_group_ids = [ "sg-050c874d", "sg-af64efe7", "sg-2730916e" ]
+  instance_type = var.ec2_instance_type
+  key_name      = var.ec2_instance_sshkey
+  vpc_security_group_ids = var.ec2_instance_securitygroup_ids
   metadata_options {
     http_tokens = "required"
   }
@@ -60,7 +35,7 @@ resource "aws_instance" "origin-server" {
   }
   user_data = templatefile("${path.module}/templates/user-data.tftpl",
     {
-      slashdev_branch = var.slashdev_deployment_branch
+      deployment_branch = var.deployment_branch
     }
   )
   user_data_replace_on_change = true
