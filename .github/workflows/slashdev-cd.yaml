@@ -1,0 +1,97 @@
+name: SlashDev CD
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+jobs:
+  pre-commit:
+    runs-on: ubuntu-22.04
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Validate using pre-commit
+        uses: pre-commit/action@v3.0.1
+  terraform-plan:
+    runs-on: ubuntu-22.04
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache asdf
+        id: asdfcache
+        uses: actions/cache@v4
+        with:
+          path: ~/.asdf
+          key: asdf-${{ hashFiles('.tool-versions') }}
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Terraform Lint
+        run: |
+          cd terraform
+          tflint
+      - name: Terraform Security
+        run: |
+          cd terraform
+          tfsec -m CRITICAL --no-code -s
+      - name: Terraform Validate/Plan
+        env:
+          AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_KEY }}"
+        run: |
+          cd terraform
+          terraform init
+          terraform validate && terraform plan
+  terraform-apply:
+    runs-on: ubuntu-22.04
+    needs: terraform-plan
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Cache asdf
+        id: asdfcache
+        uses: actions/cache@v4
+        with:
+          path: ~/.asdf
+          key: asdf-${{ hashFiles('.tool-versions') }}
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Terraform APPLY
+        env:
+          AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_KEY }}"
+        run: |
+          cd terraform
+          terraform init
+          terraform apply -auto-approve
+  hugo-build:
+    runs-on: ubuntu-22.04
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Hugo build
+        run: "hugo -s src"
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: slashdev-public
+          path: src/public

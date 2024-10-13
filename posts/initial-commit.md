@@ -1,9 +1,0 @@
----
-title: 'initial commit'
-tags: ["linux", "vscode", "git", "nodejs", "graphql", "gatsby" ]
-published: true
-date: '2020-06-13'
----
-
-It's been a long time since I hosted anything on this domain. Once I was able to acquire it again I wasn't quite sure what to do with it. I'm not exactly one to blog but I decided it might be useful to have a space where I can document / catalog everything I've worked on during my career. If you're clever and have found a previous version of this site from when I was MUCH younger, you'll notice quite a bit has changed in the web development space in 18 years. I've never been a "professional" web developer but I've always known enough to be able to throw up some personal projects. Before the concepts of "front-end developer" and "back-end developer" were really a thing I was doing both on part-time hobby basis. While I've always done development of some sort, I have never taken on the challenge of doing it professionally. That's slowly starting to change as automation is taking over the world, so having any prior experience at all (professional or otherwise) is extremely useful. Professionally I've always officially been on the "operations" side of things, but my passion is in building. No matter where I've worked I always tried to put myself at the center of finding solutions to unique and challenging problems. This often leads to quite a bit of research and development and I think that's where I excel. Anyway, in case you're wondering I've managed to put this site together using Gatsby on top of NodeJS. This is my first tiem experiementing with NodeJS and honestly only went with it because that's what Gatsby runs on so hopefully things turn out well. After I get this site initially published I'll start working on developing a pipeline via Github to automate publishing of new content, hopefully that will motivate me to write some more about the process. Until then thanks for reading!
-<br>

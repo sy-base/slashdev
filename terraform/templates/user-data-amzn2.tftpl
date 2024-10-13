@@ -1,0 +1,25 @@
+#!/bin/bash
+yum -y update
+yum -y groupinstall "Development Tools"
+yum -y install gcc make patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl11-devel tk-devel libffi-devel xz-devel
+yum -y install git libglvnd-glx libXi ruby
+adduser gatsby
+su -c 'git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1' - gatsby
+cat <<EOF >> ~gatsby/.bashrc
+source "\$HOME/.asdf/asdf.sh"
+source "\$HOME/.asdf/completions/asdf.bash"
+EOF
+su -c 'asdf plugin add nodejs' - gatsby
+su -c 'git clone -b develop https://github.com/sy-base/slashdev.git' - gatsby
+su -c 'cd slashdev; asdf install nodejs' - gatsby
+sed -i 's/PATH=$PATH/PATH=\$HOME\/.asdf\/installs\/nodejs\/14.4.0\/bin:$PATH/g' ~/.bash_profile
+su -c "sed -i 's/PATH=\$PATH/PATH=\$HOME\/.asdf\/installs\/nodejs\/14.4.0\/bin:\$PATH/g' ~/.bash_profile" - gatsby
+source ~/.bash_profile
+
+sleep 5
+#su -c 'cd slashdev; npm install -g gatsby-cli' - gatsby
+#su -c 'gatsby --version || exit 1' - gatsby
+
+#su -c 'cd slashdev; npm install' - gatsby
+#su -c 'cd slashdev; gatsby build' - gatsby
+#su -c 'cd slashdev; gatsby serve -H 0.0.0.0 > gatsby.log 2>&1 &' - gatsby
