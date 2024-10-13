@@ -1,9 +1,13 @@
 name: SlashDev CI
 on:
   workflow_dispatch:
+  pull_request:
+    types: [opened]
+    branches:
+      - master
   push:
     branches:
-      - develop
+      - feat/**
       - release/**
 jobs:
   pre-commit:
@@ -46,9 +50,14 @@ jobs:
         run: |
           cd terraform
           terraform init
-          terraform validate && terraform plan
+          terraform validate && terraform plan -out slashdev-${{ github.run_id }}.plan
+      - name: Publish Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          path: terraform/slashdev-${{ github.run_id }}.plan
   hugo-test-build:
     runs-on: ubuntu-22.04
+    needs: pre-commit
     environment:
       name: production
     steps:
