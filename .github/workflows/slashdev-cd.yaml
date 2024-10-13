@@ -1,9 +1,6 @@
 name: SlashDev CD
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
 jobs:
   terraform-plan:
     runs-on: ubuntu-22.04
@@ -37,54 +34,3 @@ jobs:
         with:
           name: slashdev-${{ github.run_id }}.plan
           path: terraform/slashdev-${{ github.run_id }}.plan
-  terraform-apply:
-    runs-on: ubuntu-22.04
-    needs: terraform-plan
-    environment:
-      name: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install asdf tools
-        uses: asdf-vm/actions/install@v3
-        with:
-          asdf_branch: v0.14.1
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: slashdev-${{ github.run_id }}.plan
-          path: terraform/
-      - name: Terraform APPLY
-        env:
-          AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
-          AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_KEY }}"
-        run: |
-          cd terraform
-          terraform init
-          terraform apply -auto-approve slashdev-${{ github.run_id }}.plan
-  hugo-build:
-    runs-on: ubuntu-22.04
-    environment:
-      name: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install asdf tools
-        uses: asdf-vm/actions/install@v3
-        with:
-          asdf_branch: v0.14.1
-      - name: Hugo build
-        run: "hugo -s src --cleanDestinationDir -e production -b ''"
-      - name: Upload artifact to Github
-        uses: actions/upload-artifact@v4
-        with:
-          name: slashdev-public-${{ github.ref }}-${{ github.sha::7 }}
-          path: src/public
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - name: Upload to S3
-        run: aws s3 cp slashdev-public-${{ github.ref }}-${{ github.sha::7 }}.zip s3://slashdev.org-artifacts/public/${{ github.ref }}/
