@@ -55,6 +55,8 @@ resource "aws_route53_record" "origin-dns" {
 
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   origin {
+    connection_attempts = 3
+    connection_timeout  = 10
     domain_name = "origin.slashdev.org"
     origin_id   = "slashdevOrigin"
 
@@ -63,6 +65,11 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
       https_port = 443
       origin_protocol_policy = "http-only"
       origin_ssl_protocols = ["TLSv1.2"]
+    }
+
+    origin_shield {
+      enabled              = true
+      origin_shield_region = "us-east-1"
     }
   }
 
