@@ -90,7 +90,6 @@ jobs:
           asdf_branch: v0.14.1
       - name: Hugo build
         run: "hugo -s src"
-
       - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:

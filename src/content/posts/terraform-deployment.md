@@ -6,7 +6,7 @@ published: '2020-06-27'
 
 Well, I decided to do some additional work on my site. Initially I was going to set the deployment up using cloudformation, but after doing some other work using terraform for another cloud provider, I just feel like terraform makes a lot more sense and decided to use that instead. For this site I'm hosting the dns zone in route53 and using cloudfront as my web frontend. Cloudfront then uses an ec2 instance as its origin server and since most of the page data is relatively static I think that should prevent the ec2 instance from taking too much traffic and falling over. I'm not likely to do any load tests though so I guess I won't really know unless my site gets popular for some reason. I've also started work on the deployment pipeline. I tend to do things manually at first just to make sure I understand how I want it to be setup, then slowly replace resources with an automated deployment. So step one is to replace ec2 instance, route53 record, and cloudfront resources with versions deployed using terraform. After I've completed that I'll validate my codebuild/codepipeline configuration and begin integrating these with terraform. Below is roughly what it should look like:<br><br>
 Enduser access:<br>
-route53 dns record -> cloudfront endpoint -> ec2 instance 
+route53 dns record -> cloudfront endpoint -> ec2 instance
 
 Deployment process:<br>
 github source repo -> codepipeline -> codebuild -> codedeploy -> ec2 instance

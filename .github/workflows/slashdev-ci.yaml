@@ -2,8 +2,8 @@ name: SlashDev CI
 on:
   workflow_dispatch:
   push:
-      branches:
-        - develop
+    branches:
+      - develop
 jobs:
   pre-commit:
     runs-on: ubuntu-22.04
