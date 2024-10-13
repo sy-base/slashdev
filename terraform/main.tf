@@ -26,7 +26,7 @@ resource "aws_instance" "origin-server" {
   ami           = data.aws_ami.image.id
   instance_type = "t3a.micro"
   key_name      = "bacon-id_rsa"
-  vpc_security_group_ids = [ "sg-097c47b767eae23ba", "sg-af64efe7", "sg-2730916e" ]
+  vpc_security_group_ids = [ "sg-050c874d", "sg-af64efe7", "sg-2730916e" ]
   metadata_options {
     http_tokens = "required"
   }
@@ -49,39 +49,14 @@ resource "aws_route53_record" "origin-dns" {
   records = [ aws_instance.origin-server.public_ip ]
 }
 
-resource "aws_s3_bucket" "artifacts" {
-  bucket = "slashdev.org-artifacts"
-  acl    = "private"
-  versioning {
-    enabled = false
-  }
-
-  lifecycle_rule {
-    abort_incomplete_multipart_upload_days = "7"
-    enabled = true
-    expiration {
-      days = 0
-      expired_object_delete_marker = false
-    }
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "artifacts" {
-  bucket = aws_s3_bucket.artifacts.id
-  block_public_acls = true
-  ignore_public_acls = true
-  block_public_policy = true
-  restrict_public_buckets = true
-}
-
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   origin {
     domain_name = "origin.slashdev.org"
     origin_id   = "slashdevOrigin"
 
     custom_origin_config {
-      http_port = 9000
-      https_port = 9443
+      http_port = 80
+      https_port = 443
       origin_protocol_policy = "http-only"
       origin_ssl_protocols = ["TLSv1.2"]
     }
