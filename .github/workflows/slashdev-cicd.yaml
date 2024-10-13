@@ -65,7 +65,7 @@ jobs:
         with:
           asdf_branch: v0.14.1
       - name: Hugo build
-        run: "hugo --cleanDestinationDir -e production -b ''"
+        run: "hugo -s src --cleanDestinationDir -e production -b ''"
   terraform-apply:
     if: github.base_ref == 'master'
     runs-on: ubuntu-22.04
