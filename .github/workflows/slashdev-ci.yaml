@@ -20,6 +20,7 @@ jobs:
         uses: pre-commit/action@v3.0.1
   terraform-plan:
     runs-on: ubuntu-22.04
+    needs: pre-commit
     environment:
       name: production
     steps:
