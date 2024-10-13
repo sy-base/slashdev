@@ -57,7 +57,7 @@ jobs:
           path: terraform/slashdev-${{ github.run_id }}.plan
   hugo-test-build:
     runs-on: ubuntu-22.04
-    need: pre-commit
+    needs: pre-commit
     environment:
       name: production
     steps:
