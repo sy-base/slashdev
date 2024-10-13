@@ -24,7 +24,7 @@ data "aws_route53_zone" "slashdev-org" {
 
 resource "aws_instance" "origin-server" {
   ami           = data.aws_ami.image.id
-  instance_type = "t3a.small"
+  instance_type = "t3a.micro"
   key_name      = "bacon-id_rsa"
   vpc_security_group_ids = [ "sg-097c47b767eae23ba", "sg-af64efe7", "sg-2730916e" ]
   metadata_options {
