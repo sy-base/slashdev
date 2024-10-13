@@ -9,7 +9,7 @@ on:
       - master
       - develop
 jobs:
-  pre-commit:
+  base-ci-testing:
     runs-on: ubuntu-22.04
     environment:
       name: production
@@ -24,7 +24,7 @@ jobs:
         uses: pre-commit/action@v3.0.1
   terraform-plan:
     runs-on: ubuntu-22.04
-    needs: pre-commit
+    needs: base-ci-testing
     environment:
       name: production
     steps:
@@ -83,7 +83,7 @@ jobs:
           terraform apply -auto-approve slashdev-${{ github.run_id }}.tfplan
   hugo-build:
     runs-on: ubuntu-22.04
-    needs: pre-commit
+    needs: base-ci-testing
     environment:
       name: production
     steps:
@@ -111,7 +111,7 @@ jobs:
       - name: Hugo build
         run: "hugo -s src --cleanDestinationDir -e production -b ''"
       - name: Set Shortened Commit SHA
-        id: get_short_sha
+        id: set_short_sha
         run: |
           COMMIT_SHA=${{ github.sha }}
           COMMIT_SHA_SHORT=${COMMIT_SHA:0:7}
@@ -121,12 +121,3 @@ jobs:
         with:
           name: slashdev-public-${{ github.ref_name }}-${{ env.COMMIT_SHA_SHORT }}
           path: src/public
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - name: Upload to S3
-        run: |
-          aws s3 cp slashdev-public-${{ github.ref_name }}-${{ env.COMMIT_SHA_SHORT }}.zip s3://slashdev.org-artifacts/public/${{ github.ref_name }}/slashdev-public-${{ github.ref_name }}-${{ env.COMMIT_SHA_SHORT }}.zip
