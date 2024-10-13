@@ -22,6 +22,31 @@ data "aws_route53_zone" "slashdev-org" {
   name = "slashdev.org."
 }
 
+resource "aws_s3_bucket" "artifacts" {
+  bucket = "slashdev.org-artifacts"
+  acl    = "private"
+  versioning {
+    enabled = false
+  }
+
+  lifecycle_rule {
+    abort_incomplete_multipart_upload_days = "7"
+    enabled = true
+    expiration {
+      days = 0
+      expired_object_delete_marker = false
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+  block_public_acls = true
+  ignore_public_acls = true
+  block_public_policy = true
+  restrict_public_buckets = true
+}
+
 resource "aws_instance" "origin-server" {
   ami           = data.aws_ami.image.id
   instance_type = "t3a.micro"
