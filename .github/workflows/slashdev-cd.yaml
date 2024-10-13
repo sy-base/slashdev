@@ -5,22 +5,8 @@ on:
     branches:
       - master
 jobs:
-  pre-commit:
-    runs-on: ubuntu-22.04
-    environment:
-      name: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install asdf tools
-        uses: asdf-vm/actions/install@v3
-        with:
-          asdf_branch: v0.14.1
-      - name: Validate using pre-commit
-        uses: pre-commit/action@v3.0.1
   terraform-plan:
     runs-on: ubuntu-22.04
-    needs: pre-commit
     environment:
       name: production
     steps:
@@ -45,7 +31,12 @@ jobs:
         run: |
           cd terraform
           terraform init
-          terraform validate && terraform plan
+          terraform validate && terraform plan -out slashdev-${{ github.run_id }}.plan
+      - name: Publish Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: slashdev-${{ github.run_id }}.plan
+          path: terraform/slashdev-${{ github.run_id }}.plan
   terraform-apply:
     runs-on: ubuntu-22.04
     needs: terraform-plan
@@ -58,6 +49,11 @@ jobs:
         uses: asdf-vm/actions/install@v3
         with:
           asdf_branch: v0.14.1
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: slashdev-${{ github.run_id }}.plan
+          path: terraform/
       - name: Terraform APPLY
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
@@ -65,7 +61,7 @@ jobs:
         run: |
           cd terraform
           terraform init
-          terraform apply -auto-approve
+          terraform apply -auto-approve slashdev-${{ github.run_id }}.plan
   hugo-build:
     runs-on: ubuntu-22.04
     environment:
@@ -78,9 +74,9 @@ jobs:
         with:
           asdf_branch: v0.14.1
       - name: Hugo build
-        run: "hugo -s src"
+        run: "hugo -s src --cleanDestinationDir -e production -b ''"
       - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:
-          name: slashdev-public
+          name: slashdev-public-${{ github.ref }}-${{ github.sha::7 }}
           path: src/public

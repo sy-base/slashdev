@@ -33,7 +33,11 @@ resource "aws_instance" "origin-server" {
   root_block_device {
       encrypted = true
   }
-  user_data = file("${path.module}/templates/user-data.tftpl")
+  user_data = templatefile("${path.module}/templates/user-data.tftpl",
+    {
+      slashdev_branch = var.slashdev_deployment_branch
+    }
+  )
   user_data_replace_on_change = true
 
   tags = {
