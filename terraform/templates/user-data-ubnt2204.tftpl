@@ -3,6 +3,7 @@
 export DEBIAN_FRONTEND=noninteractive
 apt -yq update;
 apt -yq upgrade;
+apt -yq install nginx;
 adduser --disabled-password appuser
 su -c 'git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1' - appuser
 su -c 'git clone -b develop https://github.com/sy-base/slashdev.git' - appuser
@@ -10,9 +11,12 @@ cat <<EOF >> ~appuser/.profile
 source "\$HOME/.asdf/asdf.sh"
 source "\$HOME/.asdf/completions/asdf.bash"
 EOF
+sed -i 's/user www-data/user appuser/g' /etc/nginx/nginx.conf
+sed -i 's/root \/var\/www\/html/root \/home\/appuser\/slashdev\/src\/public/g' /etc/nginx/sites-available/default
 ###
 su -c 'asdf plugin add hugo' - appuser
 su -c 'cd slashdev; asdf install hugo' - appuser
 su -c 'cd slashdev; hugo --version' - appuser
 ###
-su -c 'cd slashdev; hugo server -s src --bind 0.0.0.0 -p 9000 > hugo.log 2>&1 &' - appuser
+su -c 'cd slashdev; hugo -s src --cleanDestinationDir -e production -b "" > hugo.log 2>&1 &' - appuser
+systemctl restart nginx
