@@ -67,7 +67,7 @@ jobs:
       - name: Hugo build
         run: "hugo -s src --cleanDestinationDir -e production -b ''"
   terraform-apply:
-    if: github.base_ref == 'master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-22.04
     needs: terraform-plan
     environment:
@@ -93,7 +93,7 @@ jobs:
           terraform init
           terraform apply -auto-approve slashdev-${{ github.run_id }}.tfplan
   hugo-build:
-    if: github.base_ref == 'master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-22.04
     needs: hugo-test-build
     environment:
