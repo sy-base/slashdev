@@ -6,7 +6,7 @@ apt -yq upgrade;
 apt -yq install nginx;
 adduser --disabled-password appuser
 su -c 'git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1' - appuser
-su -c 'git clone -b ${slashdev_branch} https://github.com/sy-base/slashdev.git' - appuser
+su -c 'git clone -b ${deployment_branch} https://github.com/sy-base/slashdev.git' - appuser
 cat <<EOF >> ~appuser/.profile
 source "\$HOME/.asdf/asdf.sh"
 source "\$HOME/.asdf/completions/asdf.bash"
