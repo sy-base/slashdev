@@ -75,8 +75,16 @@ jobs:
           asdf_branch: v0.14.1
       - name: Hugo build
         run: "hugo -s src --cleanDestinationDir -e production -b ''"
-      - name: Publish artifact
+      - name: Upload artifact to Github
         uses: actions/upload-artifact@v4
         with:
           name: slashdev-public-${{ github.ref }}-${{ github.sha::7 }}
           path: src/public
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Upload to S3
+        run: aws s3 cp slashdev-public-${{ github.ref }}-${{ github.sha::7 }}.zip s3://slashdev.org-artifacts/public/${{ github.ref }}/
