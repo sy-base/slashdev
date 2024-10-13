@@ -1,4 +1,4 @@
-name: SlashDev CI
+name: SlashDev CICD
 on:
   workflow_dispatch:
   push:
@@ -55,20 +55,6 @@ jobs:
         with:
           name: slashdev-${{ github.run_id }}.tfplan
           path: terraform/slashdev-${{ github.run_id }}.tfplan
-  hugo-test-build:
-    runs-on: ubuntu-22.04
-    needs: pre-commit
-    environment:
-      name: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install asdf tools
-        uses: asdf-vm/actions/install@v3
-        with:
-          asdf_branch: v0.14.1
-      - name: Hugo build
-        run: "hugo -s src --cleanDestinationDir -e production -b ''"
   terraform-apply:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-22.04
@@ -96,9 +82,23 @@ jobs:
           terraform init
           terraform apply -auto-approve slashdev-${{ github.run_id }}.tfplan
   hugo-build:
+    runs-on: ubuntu-22.04
+    needs: pre-commit
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install asdf tools
+        uses: asdf-vm/actions/install@v3
+        with:
+          asdf_branch: v0.14.1
+      - name: Hugo build
+        run: "hugo -s src --cleanDestinationDir -e production -b ''"
+  hugo-publish:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-22.04
-    needs: hugo-test-build
+    needs: hugo-build
     environment:
       name: production
     steps:
@@ -122,7 +122,7 @@ jobs:
           name: slashdev-public-${{ github.ref_name }}-${{ env.COMMIT_SHA_SHORT }}
           path: src/public
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
