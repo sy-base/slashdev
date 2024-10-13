@@ -34,6 +34,7 @@ resource "aws_instance" "origin-server" {
       encrypted = true
   }
   user_data = file("${path.module}/templates/user-data.tftpl")
+  user_data_replace_on_change = true
 
   tags = {
     Name = "slashdev.org-origin"
