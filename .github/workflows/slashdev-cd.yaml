@@ -2,8 +2,8 @@ name: SlashDev CD
 on:
   workflow_dispatch:
   push:
-      branches:
-        - master
+    branches:
+      - master
 jobs:
   terraform-plan:
     runs-on: ubuntu-22.04

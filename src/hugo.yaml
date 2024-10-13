@@ -1,0 +1,59 @@
+baseURL: 'https://slashdev.org/'
+languageCode: 'en-us'
+title: '/Dev'
+theme: 'm10c'
+paginate: 8
+
+menu:
+  main:
+    - name: "Home"
+      identifier: "home"
+      url: "/"
+      weight: 1
+    - name: "Tags"
+      identifier: "tags"
+      url: "/tags/"
+      weight: 2
+    - name: "About"
+      identifier: "about"
+      url: "/about/"
+      weight: 3
+
+params:
+  author: "Jason Curtis"
+  description: "Self-taught developer and technology enthusiast"
+  avatar: "images/jasoncurtis01.jpg"
+  menu_item_separator: " - "
+  params.social:
+    icon: "github"
+    name: "Github"
+    url: "https://github.com/sy-base"
+  params.social:
+    icon: "linkedin"
+    name: "linkedin"
+    url: "https://www.linkedin.com/in/jason-curtis-9095531b/"
+
+  # Default theme
+  #params.style:
+  #  darkestColor: "#242930"
+  #  darkColor: "#353b43"
+  #  lightColor: "#afbac4"
+  #  lightestColor: "#ffffff"
+  #  primaryColor: "#57cc8a"
+
+  # Green theme
+  #params.style:
+  #  darkestColor: "#315659"
+  #  darkColor: "#253031"
+  #  lightColor: "#96a879"
+  #  lightestColor: "#fff"
+  #  primaryColor: "#dad865"
+
+  # Red theme
+  #params.style:
+  #  darkestColor: "#d35050"
+  #  darkColor: "#212121"
+  #  lightColor: "#d6d6d6"
+  #  lightestColor: "#d3d3d3"
+  #  primaryColor: "#ffffff"
+

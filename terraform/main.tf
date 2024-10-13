@@ -132,7 +132,7 @@ resource "aws_route53_record" "slashdev-dns" {
   zone_id = data.aws_route53_zone.slashdev-org.zone_id
   name    = "slashdev.org."
   type    = "A"
-  
+
   alias {
     name    = aws_cloudfront_distribution.slashdev_distribution.domain_name
     zone_id = aws_cloudfront_distribution.slashdev_distribution.hosted_zone_id

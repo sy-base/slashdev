@@ -1,3 +1,5 @@
+hugo extended_0.135.0
 terraform 0.14.11
 tflint 0.53.0
 tfsec 1.28.11
+pre-commit 4.0.1
