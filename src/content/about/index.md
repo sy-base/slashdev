@@ -10,47 +10,49 @@ I strive to lead systems infrastructure design and on-going innovation for a vas
 I've publisly published many projects which I maintain on my personal Github:
 https://github.com/sy-base
 
-Including this site: https://github.com/sy-base/slashdev
+Including this site: https://github.com/sy-base/slashde
 
-Specialties include:
-  Cloud:
-    - AWS EC2/S3/Route53/Auto scaling/Cloud front/Code Build
-    - GCP Compute Engine/Cloud Storage/Cloud DNS/Instance Groups/Cloud Build
-    - Docker/Kubernetes
-  Automation:
-    - Terraform
-    - Cloudformation
-    - Packer
-    - Ansible
-    - Ansible Automation Platform
-    - Puppet
-    - Github actions
-  Linux Operating System:
-    - RHEL 7/8/9
-    - Ubuntu/Debian
-    - Red hat Satellite
-    - Red hat IDM
-  Application Support:
-    - Apache/NGinX Webserver
-    - Multiple Java Application servers (Tomcat/Weblogic/etc)
-    - MySQL/PostgreSQL
-    - LDAP/Active Directory
-    - ISC Bind
-    - RADIUS
-  Programming Languages:
-    - Python
-    - BASH
-    - General C knowledge
-    - General Java knowledge
-  Monitoring Solutions:
-    - Solarwinds
-    - Nagios
-    - GCP Cloud Logging/Monitoring
-  Hardware:
-    - Network Appliance Storage Infrastructure
-    - Dell Compellent SAN
-    - Dell/HP Hardware infrastructure
-    - Cisco UCS Blades
-    - Load balancing (Alteon, Kemp)
-    - Cisco switch/router knowledge
-    - Network Infrastructure engineering (Switching)
+
+### Specialties include
+#### Cloud
+- AWS EC2/S3/Route53/Auto scaling/Cloud front/Code Build
+- GCP Compute Engine/Cloud Storage/Cloud DNS/Instance Groups/Cloud Build
+- Docker/Kubernetes
+
+#### Automation:
+  - Terraform
+  - Cloudformation
+  - Packer
+  - Ansible
+  - Ansible Automation Platform
+  - Puppet
+  - Github actions
+#### Linux Operating System:
+  - RHEL 7/8/9
+  - Ubuntu/Debian
+  - Red hat Satellite
+  - Red hat IDM
+#### Application Support:
+  - Apache/NGinX Webserver
+  - Multiple Java Application servers (Tomcat/Weblogic/etc)
+  - MySQL/PostgreSQL
+  - LDAP/Active Directory
+  - ISC Bind
+  - RADIUS
+#### Programming Languages:
+  - Python
+  - BASH
+  - General C knowledge
+  - General Java knowledge
+#### Monitoring Solutions:
+  - Solarwinds
+  - Nagios
+  - GCP Cloud Logging/Monitoring
+#### Hardware:
+  - Network Appliance Storage Infrastructure
+  - Dell Compellent SAN
+  - Dell/HP Hardware infrastructure
+  - Cisco UCS Blades
+  - Load balancing (Alteon, Kemp)
+  - Cisco switch/router knowledge
+  - Network Infrastructure engineering (Switching)
