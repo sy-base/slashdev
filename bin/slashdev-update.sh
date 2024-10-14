@@ -5,6 +5,7 @@ GIT_STATUS_FILE=".git-pull-output"
 LOG_FILE="hugo.log"
 ######
 source "${HOME_DIR}/.deployment_branch"
+source "${HOME_DIR}/.asdf/asdf.sh"
 ######
 if [ ! -d "${HOME_DIR}/slashdev" ]; then {
     git clone -b ${DEPLOYMENT_BRANCH} https://github.com/sy-base/slashdev.git
