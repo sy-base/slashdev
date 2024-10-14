@@ -2,8 +2,9 @@ baseURL: ''
 languageCode: 'en-us'
 title: '/Dev'
 theme: 'm10c'
-paginate: 8
 canonifyURLs: false
+pagination:
+  pagerSize: 8
 menu:
   main:
     - name: "Home"
