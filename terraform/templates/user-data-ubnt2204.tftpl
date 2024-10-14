@@ -6,6 +6,7 @@ apt -yq upgrade;
 apt -yq install nginx;
 adduser --disabled-password appuser
 su -c 'git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1' - appuser
+su -c 'git clone -b ${deployment_branch} https://github.com/sy-base/slashdev.git' - appuser
 su -c 'echo "export DEPLOYMENT_BRANCH=${deployment_branch}" > $HOME/.deployment_branch' - appuser
 cat <<EOF >> ~appuser/.profile
 source "\$HOME/.deployment_branch"
@@ -17,6 +18,6 @@ sed -i 's/root \/var\/www\/html/root \/home\/appuser\/www-data/g' /etc/nginx/sit
 systemctl restart nginx
 ###
 su -c 'asdf plugin add hugo' - appuser
-su -c '$HOME/bin/slashdev-update.sh' - appuser
+su -c '$HOME/slashdev/bin/slashdev-update.sh' - appuser
 ###
 su -c 'crontab -e slashdev/appuser.cron' - appuser
