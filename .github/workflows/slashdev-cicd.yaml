@@ -81,11 +81,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_KEY }}"
         run: |
           cd terraform/
-          ls -laR
           terraform init
           terraform show -no-color slashdev-${{ github.run_id }}.tfplan > slashdev-plan-output.txt
           cat slashdev-plan-output.txt
-          if grep -q "No changes. Infrastructure is up-to-date." slashdev-plan-output.txt; then
+          if grep -q "Plan: 0 to add, 0 to change, 0 to destroy." slashdev-plan-output.txt; then
             echo "No changes detected"
             echo "changed=false" >> $GITHUB_OUTPUT
           else
