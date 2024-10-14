@@ -93,10 +93,33 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
       }
     }
 
-    viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 300
+    min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+
+  }
+
+  ordered_cache_behavior {
+    path_pattern     = "/images/*"
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "slashdevOrigin"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 86400
+    compress               = true
+    viewer_protocol_policy = "allow-all"
   }
 
   price_class = "PriceClass_100"
