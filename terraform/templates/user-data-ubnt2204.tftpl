@@ -7,6 +7,7 @@ apt -yq install nginx;
 adduser --disabled-password appuser
 su -c 'git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1' - appuser
 su -c 'git clone -b ${deployment_branch} https://github.com/sy-base/slashdev.git' - appuser
+su -c 'cat "$HOME/slashdev/.tool-versions" > "$HOME/.tool-versions"' - appuser
 su -c 'echo "export DEPLOYMENT_BRANCH=${deployment_branch}" > $HOME/.deployment_branch' - appuser
 cat <<EOF >> ~appuser/.profile
 source "\$HOME/.deployment_branch"
