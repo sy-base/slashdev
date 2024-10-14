@@ -49,6 +49,14 @@ resource "aws_route53_record" "origin-dns" {
   zone_id = data.aws_route53_zone.slashdev-org.zone_id
   name    = "origin.slashdev.org."
   type    = "A"
+  ttl     = "900"
+  records = [ aws_instance.origin-server.public_ip ]
+}
+
+resource "aws_route53_record" "dev-dns" {
+  zone_id = data.aws_route53_zone.slashdev-org.zone_id
+  name    = "dev.slashdev.org."
+  type    = "A"
   ttl     = "300"
   records = [ aws_instance.origin-server.public_ip ]
 }

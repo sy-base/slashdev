@@ -16,11 +16,27 @@ source "\$HOME/.asdf/completions/asdf.bash"
 EOF
 sed -i 's/user www-data/user appuser/g' /etc/nginx/nginx.conf
 sed -i 's/root \/var\/www\/html/root \/home\/appuser\/www-data/g' /etc/nginx/sites-available/default
+cat <<EOF > /etc/nginx/sites-available/develop
+server {
+       listen 80;
+       listen [::]:80;
+
+       server_name dev.slashdev.org;
+
+       root /home/appuser/www-dev;
+       index index.html;
+
+       location / {
+               try_files \$uri \$uri/ =404;
+       }
+}
+EOF
 systemctl restart nginx
 ###
 su -c 'asdf plugin add hugo' - appuser
 su -c 'asdf install hugo' - appuser
 su -c '$HOME/slashdev/bin/slashdev-update.sh' - appuser
-su -c 'hugo -s "$HOME/slashdev/src" -d "$HOME/www-data" --cleanDestinationDir -e production -b "" > "$HOME/hugo_userdata.log" 2>&1' - appuser
+su -c 'hugo -s "$HOME/slashdev/src" -d "$HOME/www-data" --cleanDestinationDir -e production -b "" >> "$HOME/hugo_userdata.log" 2>&1' - appuser
+su -c 'hugo -s "$HOME/slashdev/src" -d "$HOME/www-dev" -D -E -F --logLevel debug --cleanDestinationDir -e development -b "" >> "$HOME/hugo_userdata.log" 2>&1' - appuser
 ###
 su -c 'crontab slashdev/appuser.cron' - appuser

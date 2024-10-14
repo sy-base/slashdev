@@ -37,7 +37,10 @@ if [ $_local = $_remote ]; then {
     }; fi
     cat "${HOME_DIR}/slashdev/.tool-versions" > "${HOME_DIR}/.tool-versions"
     asdf install hugo
+    echo "---- [$(date)] Hugo Build Prod" >> "${HOME_DIR}/${LOG_FILE}"
     hugo -s "${HOME_DIR}/slashdev/src" -d "${HOME_DIR}/www-data" --cleanDestinationDir -e production -b "" >> "${HOME_DIR}/${LOG_FILE}" 2>&1
+    echo "---- [$(date)] Hugo Build DEV" >> "${HOME_DIR}/${LOG_FILE}"
+    hugo -s "$HOME/slashdev/src" -d "$HOME/www-dev" -D -E -F --logLevel debug --cleanDestinationDir -e development -b "" >> "${HOME_DIR}/${LOG_FILE}" 2>&1
 }; fi
 
 # Clean up
