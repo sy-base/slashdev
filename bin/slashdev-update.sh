@@ -31,8 +31,10 @@ if [ $_local = $_remote ]; then {
     git pull >> "${HOME_DIR}/${LOG_FILE}"
     _git_pull_rc=$?
     if [ "${_git_pull_rc}" != 0 ]; then {
+        cd ${HOME_DIR}
         rm -rf "${HOME_DIR}/slashdev"
         git clone -b ${DEPLOYMENT_BRANCH} https://github.com/sy-base/slashdev.git
+        cd ${HOME_DIR}/slashdev
         echo "---- [$(date)] Slashdev repository retrieved" >> "${HOME_DIR}/${LOG_FILE}"
     }; fi
     cat "${HOME_DIR}/slashdev/.tool-versions" > "${HOME_DIR}/.tool-versions"
