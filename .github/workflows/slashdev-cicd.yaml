@@ -72,7 +72,7 @@ jobs:
         id: download-tfplan
         uses: actions/download-artifact@v4
         with:
-          name: slashdev-${{ github.run_id }}.tfplan
+          name: slashdev-terraform-plan
           path: terraform/
       - name: Check TFPLAN for changes
         id: check_tfplan
