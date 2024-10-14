@@ -79,7 +79,8 @@ jobs:
         run: |
           cd terraform/
           ls -laR
-          if grep -q "No changes. Infrastructure is up-to-date." <<< "$(terraform show -no-color slashdev-terraform-plan/slashdev-${{ github.run_id }}.tfplan)"; then
+          terraform init
+          if grep -q "No changes. Infrastructure is up-to-date." <<< "$(terraform show -no-color slashdev-${{ github.run_id }}.tfplan)"; then
             echo "No changes detected"
             echo "changed=false" >> $GITHUB_OUTPUT
           else
