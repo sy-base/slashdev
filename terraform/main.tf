@@ -82,7 +82,7 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
+    cached_methods   = ["GET"]
     target_origin_id = "slashdevOrigin"
 
     forwarded_values {
