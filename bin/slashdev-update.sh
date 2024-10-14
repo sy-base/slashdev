@@ -10,6 +10,8 @@ if [ ! -d "${HOME_DIR}/slashdev" ]; then {
     git clone -b ${DEPLOYMENT_BRANCH} https://github.com/sy-base/slashdev.git
     echo "---- [$(date)] Slashdev repository retrieved" >> "${HOME_DIR}/${LOG_FILE}"
     cat "${HOME_DIR}/slashdev/.tool-versions" > "${HOME_DIR}/.tool-versions"
+    asdf install hugo
+    hugo -s "${HOME_DIR}/slashdev/src" -d "${HOME_DIR}/www-data" --cleanDestinationDir -e production -b "" >> "${HOME_DIR}/${LOG_FILE}" 2>&1
 }; fi
 
 cd ${HOME_DIR}/slashdev

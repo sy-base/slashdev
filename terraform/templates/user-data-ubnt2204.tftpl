@@ -1,5 +1,5 @@
 #!/bin/bash
-#Serial: 2024101303
+#Serial: 2024101304
 export DEBIAN_FRONTEND=noninteractive
 apt -yq update;
 apt -yq upgrade;
@@ -18,7 +18,8 @@ sed -i 's/root \/var\/www\/html/root \/home\/appuser\/www-data/g' /etc/nginx/sit
 systemctl restart nginx
 ###
 su -c 'asdf plugin add hugo' - appuser
+su -c 'asdf install hugo' - appuser
 su -c '$HOME/slashdev/bin/slashdev-update.sh' - appuser
 su -c 'hugo -s "$HOME/slashdev/src" -d "$HOME/www-data" --cleanDestinationDir -e production -b "" > "$HOME/hugo_userdata.log" 2>&1' - appuser
 ###
-su -c 'crontab -e slashdev/appuser.cron' - appuser
+su -c 'crontab slashdev/appuser.cron' - appuser
