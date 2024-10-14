@@ -1,5 +1,5 @@
 #!/bin/bash
-#Serial: 2024101302
+#Serial: 2024101303
 export DEBIAN_FRONTEND=noninteractive
 apt -yq update;
 apt -yq upgrade;
@@ -19,5 +19,6 @@ systemctl restart nginx
 ###
 su -c 'asdf plugin add hugo' - appuser
 su -c '$HOME/slashdev/bin/slashdev-update.sh' - appuser
+su -c 'hugo -s "$HOME/slashdev/src" -d "$HOME/www-data" --cleanDestinationDir -e production -b "" > "$HOME/hugo_userdata.log" 2>&1' - appuser
 ###
 su -c 'crontab -e slashdev/appuser.cron' - appuser
