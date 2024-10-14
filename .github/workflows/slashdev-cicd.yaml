@@ -73,7 +73,18 @@ jobs:
         with:
           name: slashdev-${{ github.run_id }}.tfplan
           path: terraform/
+      - name: Check TFPLAN for changes
+        id: check_tfplan
+        run: |
+          if grep -q "No changes. Infrastructure is up-to-date." <<< "$(terraform show -no-color slashdev-${{ github.run_id }}.tfplan)"; then
+            echo "No changes detected"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
       - name: Terraform APPLY
+        if: steps.check_tfplan.outputs.changed == 'true'
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
           AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_KEY }}"
