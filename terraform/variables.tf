@@ -29,3 +29,19 @@ variable "ec2_instance_securitygroup_ids" {
     type        = list(string)
     default     = [ "sg-050c874d", "sg-af64efe7", "sg-2730916e" ]
 }
+
+variable "cloudfront_provision_enabled" {
+    description = "Provision cloudfront distribution"
+    type        = bool
+    default     = false
+}
+variable "cloudfront_distribution_enabled" {
+    description = "Cloudfront distribution enabled"
+    type        = bool
+    default     = false
+}
+variable "cloudfront_originshield_enabled" {
+    description = "Provision cloudfront distribution"
+    type        = bool
+    default     = false
+}

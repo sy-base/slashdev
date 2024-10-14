@@ -54,83 +54,72 @@ resource "aws_route53_record" "origin-dns" {
 }
 
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
+  count = var.cloudfront_provision_enabled ? 1 : 0
   origin {
     connection_attempts = 3
     connection_timeout  = 10
     domain_name = "origin.slashdev.org"
     origin_id   = "slashdevOrigin"
-
     custom_origin_config {
       http_port = 80
       https_port = 443
       origin_protocol_policy = "http-only"
       origin_ssl_protocols = ["TLSv1.2"]
     }
-
     origin_shield {
-      enabled              = true
+      enabled              = var.cloudfront_originshield_enabled
       origin_shield_region = "us-east-1"
     }
   }
-
-  enabled             = true
+  enabled             = var.cloudfront_distribution_enabled
   is_ipv6_enabled     = true
   comment             = "slashdev.org"
   default_root_object = "index.html"
-
   aliases = ["www.slashdev.org", "dev.slashdev.org", "slashdev.org"]
-
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "slashdevOrigin"
-
     forwarded_values {
+      headers                 = [
+        "ETag",
+        "Origin",
+      ]
       query_string = false
-
       cookies {
         forward = "none"
       }
     }
-
     min_ttl                = 0
     default_ttl            = 300
     max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
-
   }
-
   ordered_cache_behavior {
     path_pattern     = "/images/*"
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "slashdevOrigin"
-
     forwarded_values {
       query_string = false
-
       cookies {
         forward = "none"
       }
     }
-
     min_ttl                = 0
     default_ttl            = 86400
     max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "allow-all"
   }
-
   price_class = "PriceClass_100"
-
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
       locations        = ["US", "CA"]
     }
   }
-
   viewer_certificate {
     acm_certificate_arn = "arn:aws:acm:us-east-1:675169025934:certificate/eecc4e60-096c-4d71-8b1c-bc0f896ac764"
     minimum_protocol_version = "TLSv1.2_2021"
@@ -139,13 +128,14 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
 }
 
 resource "aws_route53_record" "slashdev-dns" {
+  count = var.cloudfront_provision_enabled ? 1 : 0
   zone_id = data.aws_route53_zone.slashdev-org.zone_id
   name    = "slashdev.org."
   type    = "A"
 
   alias {
-    name    = aws_cloudfront_distribution.slashdev_distribution.domain_name
-    zone_id = aws_cloudfront_distribution.slashdev_distribution.hosted_zone_id
+    name    = aws_cloudfront_distribution.slashdev_distribution[count.index].domain_name
+    zone_id = aws_cloudfront_distribution.slashdev_distribution[count.index].hosted_zone_id
     evaluate_target_health = false
   }
 }
