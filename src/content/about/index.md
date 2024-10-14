@@ -10,7 +10,7 @@ I strive to lead systems infrastructure design and on-going innovation for a vas
 I've publisly published many projects which I maintain on my personal Github:
 https://github.com/sy-base
 
-Including this site: https://github.com/sy-base/slashde
+Including this site: https://github.com/sy-base/slashdev
 
 
 ### Specialties include

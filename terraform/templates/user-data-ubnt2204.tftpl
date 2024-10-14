@@ -31,6 +31,7 @@ server {
        }
 }
 EOF
+ln -nfs /etc/nginx/sites-available/develop /etc/nginx/sites-enabled/develop
 systemctl restart nginx
 ###
 su -c 'asdf plugin add hugo' - appuser
