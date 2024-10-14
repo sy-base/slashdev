@@ -53,7 +53,7 @@ jobs:
       - name: Publish Terraform Plan
         uses: actions/upload-artifact@v4
         with:
-          name: slashdev-${{ github.run_id }}.tfplan
+          name: slashdev-terraform-plan
           path: terraform/slashdev-${{ github.run_id }}.tfplan
   terraform-apply:
     if: github.ref == 'refs/heads/master'
@@ -69,19 +69,17 @@ jobs:
         with:
           asdf_branch: v0.14.1
       - name: Download Terraform Plan
+        id: download-tfplan
         uses: actions/download-artifact@v4
         with:
           name: slashdev-${{ github.run_id }}.tfplan
           path: terraform/
-      - name: Unzip Terraform Plan artifact
-        run: |
-          cd terraform/
-          unzip slashdev-${{ github.run_id }}.tfplan.zip
       - name: Check TFPLAN for changes
         id: check_tfplan
         run: |
           cd terraform/
-          if grep -q "No changes. Infrastructure is up-to-date." <<< "$(terraform show -no-color slashdev-${{ github.run_id }}.tfplan)"; then
+          ls -laR
+          if grep -q "No changes. Infrastructure is up-to-date." <<< "$(terraform show -no-color slashdev-terraform-plan/slashdev-${{ github.run_id }}.tfplan)"; then
             echo "No changes detected"
             echo "changed=false" >> $GITHUB_OUTPUT
           else
