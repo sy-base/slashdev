@@ -1,0 +1,46 @@
+baseURL: ''
+languageCode: 'en-us'
+title: '/Dev (DEVELOPMENT)'
+theme: 'm10c'
+canonifyURLs: false
+enableRobotsTXT: false
+disableLiveReload: false
+buildDrafts: true
+buildExpired: true
+buildFuture: true
+enableGitInfo: true
+logLevel: debug
+pagination:
+  pagerSize: 8
+menu:
+  main:
+    - name: "Home"
+      identifier: "home"
+      url: "/"
+      weight: 1
+    - name: "Tags"
+      identifier: "tags"
+      url: "/tags/"
+      weight: 2
+    - name: "About"
+      identifier: "about"
+      url: "/about/"
+      weight: 3
+params:
+  author: "Jason Curtis"
+  description: "Self-taught developer and technology enthusiast"
+  avatar: "images/jasoncurtis01.jpg"
+  menu_item_separator: " - "
+  style:
+    darkestColor: "#d35050"
+    darkColor: "#212121"
+    lightColor: "#d6d6d6"
+    lightestColor: "#d3d3d3"
+    primaryColor: "#ffffff"
+  social:
+    - name: "Github"
+      icon: "github"
+      url: "https://github.com/sy-base"
+    - name: "linkedin"
+      icon: "linkedin"
+      url: "https://www.linkedin.com/in/jason-curtis-9095531b/"
