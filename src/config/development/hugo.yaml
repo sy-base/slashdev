@@ -2,7 +2,7 @@ baseURL: ''
 languageCode: 'en-us'
 title: '/Dev (DEVELOPMENT)'
 theme: 'm10c'
-canonifyURLs: false
+canonifyURLs: true
 enableRobotsTXT: false
 disableLiveReload: false
 buildDrafts: true

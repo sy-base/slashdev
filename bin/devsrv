@@ -1,0 +1,3 @@
+#!/bin/bash
+SRC_PATH="${1:-src}"
+hugo server -s "${SRC_PATH}" -b 'http://localhost'
