@@ -64,7 +64,6 @@ resource "aws_route53_record" "dev-dns" {
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   count = var.cloudfront_provision_enabled ? 1 : 0
 
-  pricing_plan = "Free"
   price_class = "PriceClass_100"
 
   origin {
@@ -78,10 +77,10 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
       origin_protocol_policy = "http-only"
       origin_ssl_protocols = ["TLSv1.2"]
     }
-    origin_shield {
-      enabled              = var.cloudfront_originshield_enabled
-      origin_shield_region = "us-east-1"
-    }
+    #origin_shield {
+    #  enabled              = var.cloudfront_originshield_enabled
+    #  origin_shield_region = "us-east-1"
+    #}
   }
   enabled             = var.cloudfront_distribution_enabled
   is_ipv6_enabled     = true
