@@ -61,6 +61,49 @@ resource "aws_route53_record" "dev-dns" {
   records = [ aws_instance.origin-server.public_ip ]
 }
 
+resource "aws_cloudfront_cache_policy" "default_policy" {
+  name        = "slashdev-default-cache-policy"
+  comment     = "Default cache behavior policy"
+  default_ttl = 300
+  max_ttl     = 31536000
+  min_ttl     = 0
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["ETag", "Origin"]
+      }
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+  }
+}
+
+resource "aws_cloudfront_cache_policy" "images_policy" {
+  name        = "slashdev-images-cache-policy"
+  comment     = "Images cache behavior policy"
+  default_ttl = 86400
+  max_ttl     = 86400
+  min_ttl     = 0
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "none"
+    }
+    query_strings_config {
+      query_string_behavior = "none"
+    }
+  }
+}
+
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   count = var.cloudfront_provision_enabled ? 1 : 0
 
@@ -91,26 +134,18 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "slashdevOrigin"
-    default_ttl            = 300
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
+    cache_policy_id        = aws_cloudfront_cache_policy.default_policy.id
   }
   ordered_cache_behavior {
     path_pattern     = "/images/*"
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "slashdevOrigin"
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-    min_ttl                = 0
-    default_ttl            = 86400
-    max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "allow-all"
+    cache_policy_id        = aws_cloudfront_cache_policy.images_policy.id
   }
   restrictions {
     geo_restriction {
