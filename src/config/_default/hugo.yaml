@@ -1,6 +1,6 @@
 baseURL: ''
 languageCode: 'en-us'
-title: '/Dev'
+title: 'Jason Curtis /Dev'
 theme: 'm10c'
 canonifyURLs: false
 enableRobotsTXT: true
