@@ -63,6 +63,9 @@ resource "aws_route53_record" "dev-dns" {
 
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   count = var.cloudfront_provision_enabled ? 1 : 0
+
+  price_class = "PriceClass_100"
+
   origin {
     connection_attempts = 3
     connection_timeout  = 10
@@ -121,7 +124,6 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     compress               = true
     viewer_protocol_policy = "allow-all"
   }
-  price_class = "PriceClass_100"
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
