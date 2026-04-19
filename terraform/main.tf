@@ -63,6 +63,9 @@ resource "aws_route53_record" "dev-dns" {
 
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   count = var.cloudfront_provision_enabled ? 1 : 0
+
+  price_class = "PriceClass_100"
+
   origin {
     connection_attempts = 3
     connection_timeout  = 10
@@ -88,19 +91,7 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "slashdevOrigin"
-    forwarded_values {
-      headers                 = [
-        "ETag",
-        "Origin",
-      ]
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-    min_ttl                = 0
     default_ttl            = 300
-    max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
@@ -121,7 +112,6 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     compress               = true
     viewer_protocol_policy = "allow-all"
   }
-  price_class = "PriceClass_100"
   restrictions {
     geo_restriction {
       restriction_type = "whitelist"
