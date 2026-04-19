@@ -91,19 +91,7 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "slashdevOrigin"
-    forwarded_values {
-      headers                 = [
-        "ETag",
-        "Origin",
-      ]
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-    min_ttl                = 0
     default_ttl            = 300
-    max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
