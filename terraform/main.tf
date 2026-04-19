@@ -22,6 +22,10 @@ data "aws_route53_zone" "slashdev-org" {
   name = "slashdev.org."
 }
 
+data "aws_cloudfront_cache_policy" "managed_caching_optimized" {
+  name = "Managed-CachingOptimized"
+}
+
 resource "aws_instance" "origin-server" {
   ami           = data.aws_ami.image.id
   instance_type = var.ec2_instance_type
@@ -61,49 +65,6 @@ resource "aws_route53_record" "dev-dns" {
   records = [ aws_instance.origin-server.public_ip ]
 }
 
-resource "aws_cloudfront_cache_policy" "default_policy" {
-  name        = "slashdev-default-cache-policy"
-  comment     = "Default cache behavior policy"
-  default_ttl = 300
-  max_ttl     = 31536000
-  min_ttl     = 0
-
-  parameters_in_cache_key_and_forwarded_to_origin {
-    cookies_config {
-      cookie_behavior = "none"
-    }
-    headers_config {
-      header_behavior = "whitelist"
-      headers {
-        items = ["ETag", "Origin"]
-      }
-    }
-    query_strings_config {
-      query_string_behavior = "none"
-    }
-  }
-}
-
-resource "aws_cloudfront_cache_policy" "images_policy" {
-  name        = "slashdev-images-cache-policy"
-  comment     = "Images cache behavior policy"
-  default_ttl = 86400
-  max_ttl     = 86400
-  min_ttl     = 0
-
-  parameters_in_cache_key_and_forwarded_to_origin {
-    cookies_config {
-      cookie_behavior = "none"
-    }
-    headers_config {
-      header_behavior = "none"
-    }
-    query_strings_config {
-      query_string_behavior = "none"
-    }
-  }
-}
-
 resource "aws_cloudfront_distribution" "slashdev_distribution" {
   count = var.cloudfront_provision_enabled ? 1 : 0
 
@@ -136,7 +97,7 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     target_origin_id = "slashdevOrigin"
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
-    cache_policy_id        = aws_cloudfront_cache_policy.default_policy.id
+    cache_policy_id        = data.aws_cloudfront_cache_policy.managed_caching_optimized.id
   }
   ordered_cache_behavior {
     path_pattern     = "/images/*"
@@ -145,7 +106,7 @@ resource "aws_cloudfront_distribution" "slashdev_distribution" {
     target_origin_id = "slashdevOrigin"
     compress               = true
     viewer_protocol_policy = "allow-all"
-    cache_policy_id        = aws_cloudfront_cache_policy.images_policy.id
+    cache_policy_id        = data.aws_cloudfront_cache_policy.managed_caching_optimized.id
   }
   restrictions {
     geo_restriction {
